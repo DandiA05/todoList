@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import CardTodo from "@/components/CardTodo";
+import InputText from "@/components/InputText";
+import { useRef, useState } from "react";
 
 export default function Home() {
   const [list, setList] = useState<any>([]);
@@ -21,41 +23,37 @@ export default function Home() {
     setList([...newTask]);
   };
 
+  const handleCheck = (index: any) => {
+    const newTask = list;
+    newTask[index].flagDone = !newTask[index].flagDone;
+    setList([...newTask]);
+  };
+
   return (
-    <div className="flex min-h-screen flex-col p-24">
-      <form className="flex flex-col mb-6" onSubmit={handleSubmit}>
+    <div>
+      <form className="flex flex-col mb-6" onSubmit={(e) => handleSubmit(e)}>
         <div className="flex flex-row justify-between">
           <h1>To Do List Dengan React</h1>
           <button type="submit">Tambah</button>
         </div>
-        <span>name : </span>
-        <input
-          name="name"
-          className="border"
-          onChange={(e) => setTodo({ ...todo, name: e.target.value })}
+        <InputText
+          label="name"
+          onChange={(e: any) => setTodo({ ...todo, name: e.target.value })}
         />
-        <span>describe : </span>
-        <input
-          name="describe"
-          className="border"
+        <InputText
+          label="describe"
           onChange={(e) => setTodo({ ...todo, describe: e.target.value })}
         />
       </form>
 
       {list?.map((item: any, index: any) => (
-        <div
+        <CardTodo
           key={index}
-          className="flex flex-row justify-between w-72 border p-3 items-center mb-2"
-        >
-          <div>
-            <p>{item?.name}</p>
-            <p>{item?.describe}</p>
-          </div>
-          <div className="flex gap-4">
-            <button onClick={() => handleDelete(index)}>Hapus</button>
-            <button>Done</button>
-          </div>
-        </div>
+          item={item}
+          index={index}
+          handleDelete={handleDelete}
+          handleCheck={handleCheck}
+        />
       ))}
     </div>
   );
