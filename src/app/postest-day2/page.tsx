@@ -1,31 +1,34 @@
 "use client";
 import Button from "@/components/Button";
-import InputText from "@/components/InputText";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { addTodo, deleteTodo, updateFlagDone } from "@/store/todo";
 import CardTodo from "@/components/CardTodo";
-import DynamicForm from "@/components/DynamicForm";
+import InputText from "@/components/InputText";
+import { RootState } from "@/store";
+import { addTodo, deleteTodo, setText, updateFlagDone } from "@/store/todo";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { FormEvent, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import * as yup from "yup";
 
 const todoSchema = yup.object({
-  name: yup.string().required(),
+  name: yup.string().required("Wajib diisi"),
 });
-export default function Page() {
-  const dispatch = useDispatch();
 
-  const { register, handleSubmit, resetField } = useForm({
+export default function PostestDay2() {
+  const dispatch = useDispatch();
+  const { listTodo } = useSelector((state: RootState) => state.todo);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(todoSchema),
   });
 
-  const { listTodo, form } = useSelector((state: RootState) => state.todo);
-
   const onSubmit = (data: any) => {
+    //   data.preventDefault();
     console.log(data);
     dispatch(addTodo(data));
-    resetField("name");
   };
 
   const handleDelete = (index: number) => {
@@ -38,24 +41,23 @@ export default function Page() {
 
   return (
     <div>
-      {/* <form
-        className="flex flex-col mb-6 gap-2"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="flex flex-col mb-6" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-row justify-between">
-          <h1>To Do List</h1>
+          <h1>To Do List Dengan React</h1>
           <Button type="submit">Tambah</Button>
         </div>
         <input
+          className={`${
+            errors.name ? "border-red-500 focus-visible:border-red-500" : ""
+          } border p-2`}
           {...register("name")}
-          name="name"
-          className="border p-2"
-          type="text"
+          placeholder="Name"
         />
+        <p>{errors.name?.message}</p>
       </form>
 
       <div className="grid md:grid-cols-2 gap-4">
-        {listTodo?.map((item: any, index: any) => (
+        {listTodo.map((item: any, index: any) => (
           <CardTodo
             key={index}
             item={item}
@@ -64,8 +66,7 @@ export default function Page() {
             handleCheck={handleCheck}
           />
         ))}
-      </div> */}
-      <DynamicForm />
+      </div>
     </div>
   );
 }

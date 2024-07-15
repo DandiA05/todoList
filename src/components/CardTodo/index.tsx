@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "../Button";
 
 export default function CardTodo({
   item,
@@ -12,7 +13,7 @@ export default function CardTodo({
   handleCheck: any;
 }) {
   return (
-    <div className="flex flex-row justify-between w-72 border p-3 items-center mb-2">
+    <div className="flex flex-row justify-between  border p-3 items-center mb-2">
       <div>
         <p
           className={`font-bold text-[20px] ${
@@ -26,12 +27,12 @@ export default function CardTodo({
         </p>
       </div>
       <div className="flex gap-4">
-        <button onClick={() => handleDelete(index)}>Hapus</button>
         <input
           type="checkbox"
           value={item?.flagDone}
           onChange={() => handleCheck(index)}
         />
+        <Button onClick={() => handleDelete(index)}>Hapus</Button>
       </div>
     </div>
   );
